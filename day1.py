@@ -1,7 +1,7 @@
 def mov_av(data, win):
     mov_av_data = []
     for i in range(len(data)):
-        if i + win <= len(data) - 1:
+        if i + win <= len(data):
             s = 0
             for j in range(i, i + win):
                 s += data[j]
@@ -12,6 +12,7 @@ def mov_av(data, win):
 def calc_inc(dep, window):
     increased = 0
     movav = mov_av(dep, window)
+    print(movav)
     current_depth = movav[0]
     for i in range(1, len(movav)):
         if movav[i] > current_depth:
