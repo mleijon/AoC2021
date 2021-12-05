@@ -20,7 +20,7 @@ def p2(m):
 
 
 if __name__ == '__main__':
-    with open('d2_inp.txt', 'r') as f:
+    with open('d2/d2_inp.txt', 'r') as f:
         moves = [(int(m.split()[1]), m.split()[0].strip()) for m in f.readlines()]
     print('The answer to part 1 is: {}'.format(p1(moves)))
     print('THe answer to part 2 is: {}'.format(p2(moves)))
