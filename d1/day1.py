@@ -23,5 +23,5 @@ def calc_inc(dep, window):
 if __name__ == '__main__':
     with open('d1/d1_inp.txt', 'r') as f:
         depths = [int(d.strip()) for d in f.readlines()]
-    print('The answer to part one is: {}'.format(calc_inc(depths, 1)))
-    print('The answer to part two is: {}'.format(calc_inc(depths, 3)))
+    print('The answer to part 1 is: {}'.format(calc_inc(depths, 1)))
+    print('The answer to part 2 is: {}'.format(calc_inc(depths, 3)))

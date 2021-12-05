@@ -26,7 +26,7 @@ def reduce_diag(words, pos, bit1, bit2):
 if __name__ == '__main__':
     gamma = ''
     epsilon = ''
-    with open('d3_inp.txt', 'r') as f:
+    with open('d3/d3_inp.txt', 'r') as f:
         diag = [list(x.strip()) for x in f.readlines()]
     for bit in range(len(diag[0])):
         if count_01(diag)[bit][0] > count_01(diag)[bit][1]:
