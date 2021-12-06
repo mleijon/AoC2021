@@ -28,7 +28,6 @@ if __name__ == '__main__':
     high_vents = set()
     all_vents_a = set()
     high_vents_a = set()
-
     with open('d5/d5_inp.txt') as f:
         for line in [x.strip().split(' -> ') for x in f.readlines()]:
             start = (int(line[0].split(',')[0]), int(line[0].split(',')[1]))
@@ -43,5 +42,3 @@ if __name__ == '__main__':
                     all_vents_a.add(position)
         print('The answer to part 1 is: {}'.format(len(high_vents_a)))
         print('The answer to part 2 is: {}'.format(len(high_vents)))
-
-
