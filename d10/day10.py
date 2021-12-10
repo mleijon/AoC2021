@@ -37,5 +37,5 @@ if __name__ == '__main__':
     for item in incomplete:
         comp_scores.append(auto_comp_score(item))
     comp_scores = sorted(comp_scores)
-    middle = (len(comp_scores) - 1) // 2
-    print('The answer to part 2 is: {}'.format(comp_scores[middle]))
+    print('The answer to part 2 is: {}'.format(comp_scores
+                                               [(len(comp_scores) - 1) // 2]))
