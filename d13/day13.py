@@ -42,13 +42,17 @@ if __name__ == '__main__':
     for y in range(max_y + 1):
         for x in range(max_x + 1):
             if (x, y) in current_coords:
+                time.sleep(0.1)
                 pad.addch(' ', curses.color_pair(1))
+                pad.refresh(0, 0, 5, 5, 20, 75)
             else:
+                time.sleep(0.1)
                 pad.addch(' ')
+                pad.refresh(0, 0, 5, 5, 20, 75)
         pad.addch('\n')
     pad.refresh(0, 0, 5, 5, 20, 75)
     curses.nocbreak()
     curses.echo()
-    time.sleep(20)
+    time.sleep(10)
     curses.endwin()
 
