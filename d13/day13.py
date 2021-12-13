@@ -1,5 +1,6 @@
 import curses
 import time
+import os
 
 
 def turn(axis, coords):
