@@ -1,3 +1,7 @@
+import curses
+import time
+
+
 def turn(axis, coords):
     new_coords = set()
     for coord in coords:
@@ -15,7 +19,7 @@ def turn(axis, coords):
 
 
 if __name__ == '__main__':
-    with open('d13/d13_inp.txt') as f:
+    with open('d13_inp.txt') as f:
         coordinates, folds = f.read().split('\n\n')
         start_coordinates = [(int(x[0]), int(x[1])) for x in [s.split(',') for s in coordinates.split('\n')]]
         folds = [(x[0][11:], int(x[1])) for x in [s.split('=') for s in folds.strip().split('\n')]]
@@ -28,4 +32,23 @@ if __name__ == '__main__':
     used_folds = folds[:1]
     for fold in folds:
         current_coords = turn(fold, current_coords)
-    print(current_coords)
+    max_x = max([s[0] for s in current_coords])
+    max_y = max([s[1] for s in current_coords])
+    curses.initscr()
+    curses.curs_set(0)
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+    pad = curses.newpad(50, 50)
+    for y in range(max_y + 1):
+        for x in range(max_x + 1):
+            if (x, y) in current_coords:
+                pad.addch(' ', curses.color_pair(1))
+            else:
+                pad.addch(' ')
+        pad.addch('\n')
+    pad.refresh(0, 0, 5, 5, 20, 75)
+    curses.nocbreak()
+    curses.echo()
+    time.sleep(20)
+    curses.endwin()
+
