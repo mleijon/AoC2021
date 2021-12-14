@@ -20,7 +20,7 @@ if __name__ == '__main__':
         conversions[step[0]] = step[1]
     for i in range(len(template) - 1):
         current_pairs.append(template[i] + template[i + 1])
-    polymer_pairs = (grow_pairs(current_pairs, 0, 40))
+    polymer_pairs = (grow_pairs(current_pairs, 0, 10))
     polymer = polymer_pairs[0]
     for i in range(1, len(polymer_pairs) - 1):
         polymer += polymer_pairs[i][1]
