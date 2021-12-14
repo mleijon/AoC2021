@@ -40,8 +40,6 @@ if __name__ == '__main__':
     element_count = defaultdict(lambda: 0)
     with open('d14/d14_inp.txt') as f:
         template, steps = [x.strip() for x in f.read().split('\n\n')]
-    first_element = template[0]
-    last_element = template[-1]
     steps = [x.split(' -> ') for x in steps.split('\n')]
     for step in steps:
         conversions[step[0]] = step[1]
