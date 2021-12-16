@@ -16,6 +16,7 @@ def make_steps(positions, cavern):  # positions [((x, y), risk)]
         pos_minrisk = min([x[1] for x in new_positions if x[0] == item])
         new_positions_red.append((item, pos_minrisk))
     new_positions = new_positions_red
+    print(new_positions)
     return new_positions
 
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     small_cavern = list()
     large_cavern = list()
     final_paths = list()
-    with open('d15/d15_inp.txt') as f:
+    with open('d15/simon.txt') as f:
         cavern_rows = [x.strip() for x in f.readlines()]
         for i, row in enumerate(cavern_rows):
             small_cavern.append([])
@@ -53,9 +54,9 @@ if __name__ == '__main__':
     while current_positions:
         current_positions = make_steps(current_positions, small_cavern)
     print('The answer to part 1 is: {}'.format(min(final_paths)))
-    large_cavern = make_large_cavern(small_cavern)
-    current_positions = [((0, 0), 0)]
-    final_paths = []
-    while current_positions:
-        current_positions = make_steps(current_positions, large_cavern)
-    print('The answer to part 2 is: {}'.format(min(final_paths)))
+    # large_cavern = make_large_cavern(small_cavern)
+    # current_positions = [((0, 0), 0)]
+    # final_paths = []
+    # while current_positions:
+    #     current_positions = make_steps(current_positions, large_cavern)
+    # print('The answer to part 2 is: {}'.format(min(final_paths)))
