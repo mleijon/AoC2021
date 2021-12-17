@@ -1,0 +1,9 @@
+version nr	Type nr
+
+3 bits		3 bits (== 4 literal)	read 5 and 5 until first of 5 is zero: determine number of 5 (n) pad with (6 + 5xn) % 4 zeros gives total length L = 6 + 5xn +  (6 + 5xn) % 4
+
+3 bits		3 bits (!= 4 operator)	(length type ID (0))[15 bits = total len of subpacket] Total length of packet 7 + 15 + number given by the 15 bits
+					(length type ID (1))[11 bits = number of sub-packets] Total length of 7 +11 + 11xnumber given by 11 bits
+
+100 010 1 00000000001 001 010 1 00000000001 101 010 0 000000000001011 110 100 01111 000
+ 4		               1		             5			               6
