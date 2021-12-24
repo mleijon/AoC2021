@@ -13,7 +13,6 @@ def operation(current_packets):
     operands_not_used = current_packets[1]
     print(current_packets[0])
     operator = current_packets[0][-1]
-    print(operator)
     pointer = operands_used[0][2]
     op_values = []
     result = list()
@@ -22,6 +21,7 @@ def operation(current_packets):
     if operator[0] == 0:
         result = [4, sum(op_values), pointer]
     elif operator[0] == 1:
+        print('I\'m here now!')
         prod = 1
         for op in operands_used:
             prod *= op[1]
@@ -37,10 +37,15 @@ def operation(current_packets):
     elif operator[0] == 7:
         result = [4, int(operands_used[1] == operands_used[0]), pointer]
     if operands_not_used:
-        result = deque(result)
+        print('Operands not used: {}'.format(operands_not_used))
+        print('result: {}'.format(result))
+        result = deque([result])
         result.extendleft(operands_not_used)
+        print('test1')
+        print(result)
         return result
     else:
+        print('test2')
         return result
 
 
@@ -98,7 +103,7 @@ if __name__ == '__main__':
             current_packet.append(1)
         parsed_packets.appendleft(current_packet)
     print('The answer to part 1 is: {}'.format(ver_sum))
-
+    print(parsed_packets)
     curr_select = list()
     while len(parsed_packets) > 1:
         if parsed_packets[0][0] == 4:
@@ -106,6 +111,6 @@ if __name__ == '__main__':
         else:
             curr_select.append(parsed_packets.popleft())
             parsed_packets.appendleft(operation(split_operands(curr_select)))
-
+            curr_select = []
 
 
