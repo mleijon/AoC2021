@@ -1,79 +1,72 @@
-from collections import deque
-
-
-def conv2bin(data):
+def conv2bin(data) -> str:
     packetbin = ''
     for ch in data:
         packetbin += bin(int(ch, 16))[2:].zfill(4)
     return packetbin
 
 
-def operation(current_packets):
-    operands_used = current_packets[0][:-1]
-    operands_not_used = current_packets[1]
-    print(current_packets[0])
-    operator = current_packets[0][-1]
-    pointer = operands_used[0][2]
-    op_values = []
-    result = list()
-    for op in operands_used:
-        op_values.append(op[1])
-    if operator[0] == 0:
-        result = [4, sum(op_values), pointer]
-    elif operator[0] == 1:
-        print('I\'m here now!')
-        prod = 1
-        for op in operands_used:
-            prod *= op[1]
-        result = [4, prod, pointer]
-    elif operator[0] == 2:
-        result = [4, min(operands_used), pointer]
-    elif operator[0] == 3:
-        result = [4, max(operands_used), pointer]
-    elif operator[0] == 5:
-        result = [4, int(operands_used[1] > operands_used[0]), pointer]
-    elif operator[0] == 6:
-        result = [4, int(operands_used[1] < operands_used[0]), pointer]
-    elif operator[0] == 7:
-        result = [4, int(operands_used[1] == operands_used[0]), pointer]
-    if operands_not_used:
-        print('Operands not used: {}'.format(operands_not_used))
-        print('result: {}'.format(result))
-        result = deque([result])
-        result.extendleft(operands_not_used)
-        print('test1')
-        print(result)
-        return result
-    else:
-        print('test2')
-        return result
+def find_calculable(current_packets) -> tuple:
 
+    def can_compute() -> tuple:
+        if pkt[3] == 0:
+            i = 1
+            try:
+                while (current_packets[pkt_nr + i][2] <= (current_packets[pkt_nr][2] + current_packets[pkt_nr][1])) \
+                        and current_packets[pkt_nr + i][0] == 4:
+                    if current_packets[pkt_nr + i][2] == current_packets[pkt_nr][1] + current_packets[pkt_nr][2]:
+                        return pkt_nr, pkt_nr + i
+                    else:
+                        i += 1
+            except IndexError:
+                return ()
+        elif pkt[3] == 1:
+            for i in range(pkt_nr + 1, pkt_nr + current_packets[pkt_nr][1] + 1):
+                if current_packets[i][0] == 4:
+                    continue
+                else:
+                    return ()
+            return pkt_nr, pkt_nr + current_packets[pkt_nr][1]
 
-def split_operands(pack):
-    pack_used = list()
-    pack_not_used = list()
-    if pack[-1][3] == 0:  # length type
-        for packet in pack[:-1]:
-            if packet[2] <= pack[-1][2] + pack[-1][1]:
-                pack_used.append(packet)
+    for pkt_nr, pkt in enumerate(current_packets):
+        if len(pkt) == 4:
+            if can_compute():
+                return can_compute()
             else:
-                pack_not_used.append(packet)
-        pack_used.append(pack[-1])
-    elif pack[-1][3] == 1:  # nr type
-        pack_used = pack[-1*pack[-1][1] - 1:]
-        pack_not_used = pack[:-1*pack[-1][1] - 1]
-    return pack_used, pack_not_used
+                continue
+
+        
+def compute(current_packets, calc_pack) -> list:
+    calc_pack = current_packets[calc_pack[0]:calc_pack[1] + 1]
+    operator = calc_pack[0][0]
+    new_pointer = calc_pack[-1][2]
+    if operator == 0:
+        new_value = sum([x[1] for x in calc_pack[1:]])
+    elif operator == 1:
+        new_value = 1
+        for op in calc_pack[1:]:
+            new_value *= op[1]
+    elif operator == 2:
+        new_value = min([x[1] for x in calc_pack[1:]])
+    elif operator == 3:
+        new_value = max([x[1] for x in calc_pack[1:]])
+    elif operator == 5:
+        new_value = int(calc_pack[1][1] > calc_pack[2][1])
+    elif operator == 6:
+        new_value = int(calc_pack[1][1] < calc_pack[2][1])
+    else:
+        new_value = int(calc_pack[1][1] == calc_pack[2][1])
+    return [4, new_value, new_pointer]
 
 
 if __name__ == '__main__':
     with open('d16/d16_inp.txt') as f:
         hexdata = f.readline().strip()
     packets = conv2bin(hexdata)
-    parsed_packets = deque()  # [operation, value, pointer, length type ID]
+    parsed_packets = list()  # [operation, value, pointer, length type ID]
     p = 0
     ver_sum = 0
     header = list()
-    while not set([ch for ch in packets[p:]]) in [{'0'}, {}]:
+    while not set([ch for ch in packets[p:]]) in [{'0'}, set()]:
         current_packet = []
         header.append((packets[p:p + 3], packets[p + 3:p + 6]))
         packet_ver = int(header[-1][0], 2)
@@ -101,16 +94,14 @@ if __name__ == '__main__':
             p += 12
             current_packet.append(p - 1)
             current_packet.append(1)
-        parsed_packets.appendleft(current_packet)
+        parsed_packets.append(current_packet)
     print('The answer to part 1 is: {}'.format(ver_sum))
-    print(parsed_packets)
-    curr_select = list()
     while len(parsed_packets) > 1:
-        if parsed_packets[0][0] == 4:
-            curr_select.append(parsed_packets.popleft())
-        else:
-            curr_select.append(parsed_packets.popleft())
-            parsed_packets.appendleft(operation(split_operands(curr_select)))
-            curr_select = []
-
-
+        subpkt = find_calculable(parsed_packets)
+        parsed_pkt_new = parsed_packets[:subpkt[0]]
+        parsed_calc = compute(parsed_packets, find_calculable(parsed_packets))
+        parsed_pkt_end = parsed_packets[subpkt[1] + 1:]
+        parsed_pkt_new.append(parsed_calc)
+        parsed_pkt_new.extend(parsed_pkt_end)
+        parsed_packets = parsed_pkt_new.copy()
+    print('The answer to part 2 is: {}'.format(parsed_packets[0][1]))
